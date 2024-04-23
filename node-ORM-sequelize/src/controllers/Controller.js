@@ -49,7 +49,7 @@ class Controller {
     const { id } = req.params;
     const dadosAtualizados = req.body;
     try {
-      const foiAtualizado = await this.entidadeService.atualizaRegistro(dadosAtualizados, Number(id));
+      const foiAtualizado = await this.entidadeService.atualizaRegistro(dadosAtualizados, {id: Number(id)});
       if (!foiAtualizado) {
         return res.status(400).json({ mensagem: 'Registro não foi atualizado'});
       } 
