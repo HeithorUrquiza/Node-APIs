@@ -1,4 +1,4 @@
-import { updateTextEditor } from "./document.js";
+import { alertAndRedirect, updateTextEditor } from "./document.js";
 
 const socket = io();
 
@@ -12,8 +12,16 @@ function selectDocument(documentName){
     })
 }
 
+function emitExcludeDocument(documentName){
+    socket.emit("excludeDocument", documentName);
+}
+
 socket.on("text_all_clients", (text) => {
     updateTextEditor(text) //Atualizando o valor da caixa de texto no frontend 
 })
 
-export { emitTextEditor, selectDocument };
+socket.on("successExcludeDocument", (documentName) => {
+    alertAndRedirect(documentName);
+})
+
+export { emitTextEditor, selectDocument, emitExcludeDocument };

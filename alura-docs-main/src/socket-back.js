@@ -1,9 +1,34 @@
-import { findDocument, updateDocument } from "./dbDocuments.js";
+import { addDocument, excludeDocument, findDocument, getDocuments, updateDocument } from "./dbDocuments.js";
 import io from "../server.js";
 
 
 io.on('connection', (socket) => {
-    console.log(`Um usuário foi conectado ${socket.id}`);
+    socket.on('getDocuments', async (returnDocuments) => {
+        const documents = await getDocuments();
+        returnDocuments(documents);
+    })
+
+    socket.on("addDocument", async (documentName) => {
+        const documentExist = (await findDocument(documentName)) !== null;
+
+        if (documentExist) {
+            socket.emit("documentExist", documentName);
+        } else {
+            const result = await addDocument(documentName);
+            
+            if (result.acknowledged) {
+                io.emit("addInterfaceDocument", documentName);
+            }
+        }
+
+    })
+
+    socket.on("excludeDocument", async (documentName) => {
+        const result = await excludeDocument(documentName);
+        if (result.deletedCount) {
+            io.emit("successExcludeDocument", documentName);
+        }
+    })
 
     socket.on('selectDocument', async (documentName, returnText) => {
         socket.join(documentName); //Cria um grupo para o socket
