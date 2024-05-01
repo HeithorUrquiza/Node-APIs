@@ -1,12 +1,12 @@
-import collection from "../config/db.connect.js";
+import { docCollection } from "../config/db.connect.js";
 
 function getDocuments(){
-    const documents = collection.find().toArray();
+    const documents = docCollection.find().toArray();
     return documents;
 }
 
 function addDocument(documentName){
-    const document = collection.insertOne({
+    const document = docCollection.insertOne({
         name: documentName,
         text: ""
     });
@@ -14,19 +14,19 @@ function addDocument(documentName){
 }
 
 function excludeDocument(documentName){
-    const document = collection.deleteOne({
+    const document = docCollection.deleteOne({
         name: documentName
     });
     return document;
 }
 
 function findDocument(name){
-    const document = collection.findOne({name});
+    const document = docCollection.findOne({name});
     return document;
 }
 
 function updateDocument(name, text){
-    const document = collection.updateOne({name}, {$set: {text}});
+    const document = docCollection.updateOne({name}, {$set: {text}});
     return document;
 }
 

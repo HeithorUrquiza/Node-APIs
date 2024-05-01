@@ -7,7 +7,7 @@ const textEditor = document.getElementById("editor-texto");
 const documentTitle = document.getElementById("titulo-documento");
 const excludeBotton = document.getElementById("excluir-documento");
 
-documentTitle.textContent = documentName || "Documento sem título"; //Atualiza o título do documento
+documentTitle.textContent = documentName //|| "Documento sem título"; //Atualiza o título do documento
 
 selectDocument(documentName)
 
