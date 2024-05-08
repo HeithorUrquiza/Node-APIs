@@ -1,4 +1,5 @@
 import { getRegister } from "../dbUsers.js";
+import createJwt from "../utils/createJwt.js";
 import userAuthenticate from "../utils/userAuthenticate.js";
 
 function loginEvents(socket, io){
@@ -8,7 +9,8 @@ function loginEvents(socket, io){
         if (user) {
             const authenticated = userAuthenticate(password, user)
             if (authenticated) {
-                socket.emit("successAuth");
+                const tokenJwt = createJwt({ name })
+                socket.emit("successAuth", tokenJwt);
             } else {
                 socket.emit("failAuth");
             }

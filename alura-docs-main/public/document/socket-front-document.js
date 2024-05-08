@@ -1,6 +1,16 @@
+import { getCookie } from "../utils/cookie.js";
 import { alertAndRedirect, updateTextEditor } from "./document.js";
 
-const socket = io();
+const socket = io("/user", {
+    auth: {
+        token: getCookie("tokenJwt")
+    }
+});
+
+socket.on("connect_error", (error) => {
+    alert(error);
+    window.location.href = "/login/index.html";
+});
 
 function emitTextEditor(dados){
     socket.emit("text", dados); //Acionando um evento chamado "text" e passando o valor da caixa de texto
