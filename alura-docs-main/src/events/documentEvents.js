@@ -1,4 +1,5 @@
 import { excludeDocument, findDocument, updateDocument } from "../dbDocuments.js";
+import { addConection, getDocumentUser } from "../utils/documentConections.js";
 
 function documentEvents(socket, io){
     socket.on("excludeDocument", async (documentName) => {
@@ -8,13 +9,18 @@ function documentEvents(socket, io){
         }
     });
 
-    socket.on('selectDocument', async (documentName, returnText) => {
-        socket.join(documentName); //Cria um grupo para o socket
-        
+    socket.on('selectDocument', async ({ documentName, userName }, returnText) => {
         const document = await findDocument(documentName);
         
         if (document) {
-            returnText(document.text)
+            socket.join(documentName); //Cria um grupo para o socket
+            addConection({ documentName, userName });
+
+            const users = getDocumentUser(documentName);
+            
+            io.to(documentName).emit("documentUsers", users);
+
+            returnText(document.text);
         }
     });
 

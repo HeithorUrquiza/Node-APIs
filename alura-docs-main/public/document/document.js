@@ -6,10 +6,21 @@ const documentName = params.get("nome"); //Recuperamos o valor do parâmetro 'no
 const textEditor = document.getElementById("editor-texto");
 const documentTitle = document.getElementById("titulo-documento");
 const excludeBotton = document.getElementById("excluir-documento");
+const usersConnected = document.getElementById("usuarios-conectados");
 
-documentTitle.textContent = documentName //|| "Documento sem título"; //Atualiza o título do documento
+documentTitle.textContent = documentName || "Documento sem título"; //Atualiza o título do documento
 
-selectDocument(documentName)
+function successAuth(payload){
+    selectDocument({ documentName, userName: payload.name })
+}
+
+function updateUserInterface(users) {
+    usersConnected.innerHTML = "Estive aqui";
+
+    users.forEach( user => {
+        usersConnected.innerHTML += `<li class="list-group-item">${user}</li>`;
+    });
+}
 
 textEditor.addEventListener("keyup", () => {
     emitTextEditor({
@@ -33,4 +44,5 @@ function alertAndRedirect(name){
     }
 }
 
-export { updateTextEditor, alertAndRedirect };
+
+export { updateTextEditor, alertAndRedirect, successAuth, updateUserInterface };
