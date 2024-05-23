@@ -22,8 +22,43 @@ describe('Testes do carrinho', () => {
     expect(carrinho.itens).toContain(item2);
   });
 
+  it('Deve retornar o valor total da compra', () => {
+    const item = new Item('Mel', 2, 5);
+    const carrinho = new Carrinho();
+
+    carrinho.adiciona(item);
+    carrinho.adicionaFrete(10);
+
+    expect(carrinho.calculaTotal()).toBe(20);
+  });
+
   it('Deve conter a prorpiedade "total" na inicialização', () => {
     const carrinho = new Carrinho();
     expect(carrinho).toHaveProperty('total');
+  });
+
+  it('Deve lançar erro ao finalizar compra com carrinho vazio', () => {
+    function englobaErroCarrinho() {
+      const carrinho = new Carrinho();
+      carrinho.finalizaCompra();
+    }
+
+    expect(englobaErroCarrinho).toThrowError('Carrinho de compras vazio');
+  });
+
+  it('Deve finalizar as compras', () => {
+    const item = new Item('Beterraba', 2, 5);
+    const item2 = new Item('Mel', 1.5, 2);
+    const carrinho = new Carrinho();
+
+    carrinho.adiciona(item);
+    carrinho.adiciona(item2);
+    carrinho.adicionaFrete(10);
+
+    expect(carrinho.finalizaCompra()).toStrictEqual({
+      subtotal: 13,
+      frete: 10,
+      total: 23,
+    });
   });
 });
